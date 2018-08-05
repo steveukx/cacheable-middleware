@@ -44,3 +44,8 @@ Duration Syntax
 ===============
 
 For conveninece, durations can be supplied as any arguments that can be received by [Moment.js](http://momentjs.com/docs/).
+
+Breaking Changes
+================
+
+Upgrading to version 1.x requires node >= 6 to support the use of ES6

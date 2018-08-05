@@ -5,7 +5,7 @@
 
    "use strict";
 
-   var Moment = require('moment');
+   const moment = require('moment');
 
    /**
     * Configure the cacheable middleware with a default duration to cache responses for in the client browser, supplying
@@ -35,19 +35,20 @@
     * @param {String} [durationKey] for use when supplying a number and string as accepted by Moment.js
     * @function
     */
-   function Cacheable(duration, durationKey) {
-      if(!duration) {
+   function Cacheable (duration, durationKey) {
+      if (!duration) {
          return Cacheable.cachedResponse.bind(this, null);
       }
 
-      if(!Moment.isDuration(duration)) {
-         duration = Moment.duration.apply(Moment, arguments);
-         if(!duration.asMilliseconds()) {
+      if (!moment.isDuration(duration)) {
+         duration = moment.duration(...arguments);
+
+         if (!duration.asMilliseconds()) {
             throw new Error('Specified duration would result in no cache lifespan. ' + JSON.stringify([].slice.call(arguments, 0)));
          }
       }
 
-      return Cacheable.cachedResponse.bind(this, duration.asMilliseconds());
+      return Cacheable.cachedResponse.bind(null, duration.asMilliseconds());
    }
 
    /**
@@ -57,9 +58,13 @@
     * @param {http.ServerResponse} res
     * @param {Function} next
     */
-   Cacheable.cachedResponse = function(ms, req, res, next) {
+   Cacheable.cachedResponse = function (ms, req, res, next) {
       res.cacheFor = Cacheable.cacheFor;
-      ms && res.cacheFor(ms);
+
+      if (ms) {
+         res.cacheFor(ms);
+      }
+
       next();
    };
 
@@ -68,13 +73,14 @@
     * @param {Number} ms
     * @return {http.ServerResponse}
     */
-   Cacheable.cacheFor = function(ms) {
-      var duration = (Moment.isDuration(ms)) ? ms : Moment.duration.apply(Moment, arguments);
-      var then  = Moment().add(duration);
+   Cacheable.cacheFor = function (ms) {
+      const duration = (moment.isDuration(ms)) ? ms : moment.duration(...arguments);
+      const then = moment().add(duration);
 
       this.set('Expires', then.toDate().toUTCString());
       this.set('Last-Modified', (new Date).toUTCString());
       this.set('Cache-Control', 'max-age=' + Math.floor(duration.asSeconds()));
+
       return this;
    };
 
