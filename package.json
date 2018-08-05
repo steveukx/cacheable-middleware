@@ -22,7 +22,8 @@
     "node": ">= 6"
   },
   "scripts": {
-    "test": "jasmine test/*.spec.js"
+    "test": "jasmine test/*.spec.js",
+    "preversion": "npm test"
   },
   "dependencies": {
     "moment": "^2.22.2"
