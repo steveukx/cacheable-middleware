@@ -1,6 +1,6 @@
 {
   "name": "cacheable-middleware",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Middleware component to set cache headers on responses from an Express or Connect server",
   "author": "Steve King <steve@mydev.co>",
   "contributors": [
